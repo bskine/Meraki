@@ -35,7 +35,7 @@ for i in retrieved:
 output = json.dumps(devices_in_use, indent=2)
 
 with open('meraki_devices.txt', 'w') as f:
-    f.write('Devices in use in the "alp-projects-wireless" network are:')
+    f.write('Devices in use in the "alp-projects-wireless" network are:\n')
     f.write(output)
     f.write('\n')
     f.write(f"Model MR18's in this environment = {mr18}\n")

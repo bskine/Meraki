@@ -15,3 +15,6 @@ headers = {
 
 response = requests.request("GET", url, headers=headers, data=payload)
 pp(response.json())
+
+for i in response.json():
+    print(f'Network: {i["name"]} , ID: {i["id"]}')

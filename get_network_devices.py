@@ -1,5 +1,4 @@
 import json
-
 import requests
 from shared_lists import credentials
 from pprint import pprint as pp

@@ -1,7 +1,8 @@
-import json
+# import json
 import requests
 from shared_lists import credentials
-from pprint import pprint as pp
+
+# from pprint import pprint as pp
 
 get_devices_url = credentials.url
 get_devices_payload = {}
@@ -14,6 +15,7 @@ response = requests.request("GET", get_devices_url, headers=get_devices_headers,
 retrieved = response.json()
 
 devices_in_use = []
+lldp_source = []
 for i in retrieved:
     device_data = {'device_name': i['name'],
                    'mac': i['mac'],
@@ -29,7 +31,22 @@ for i in retrieved:
     }
     lldp_response = requests.request('GET', get_lldp_url, headers=get_lldp_headers, data=get_lldp_payload)
     lldp_all = lldp_response.json()
-    lldp_info = lldp_all['ports']
-    devices_in_use.append(device_data)
-
-pp(lldp_info)
+    if lldp_all.get('ports') is None:
+        print(f'LLDP disabled on port for AP named {i["name"]}')
+        continue
+    else:
+        try:
+            yeetus = lldp_all.get('ports')['wired0']['cdp']
+            lldp_data = {'deviceId': yeetus['deviceId'],
+                         'address': yeetus['address'],
+                         'portId': yeetus['portId'],
+                         'MAC_of_AP': i['mac']
+                         }
+            print(f'{i["name"]} : {lldp_data}')
+        except Exception:
+            yeetus = lldp_all.get('ports')['wan0']['cdp']
+            lldp_data = {'deviceId': yeetus['deviceId'],
+                         'address': yeetus['address'],
+                         'portId': yeetus['portId']
+                         }
+            print(f'{i["name"]} : {lldp_data}')
